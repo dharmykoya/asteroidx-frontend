@@ -4,6 +4,8 @@ import "./App.css";
 import Sidebar from "./components/sidebar/Sidebar";
 import AddStore from "./views/AddStore/AddStore";
 import Dashboard from "./views/Dashboard/Dashboard";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -16,9 +18,21 @@ function App() {
               <Sidebar />
             </div>
             <div className="col-md-9">
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
               <Switch>
                 <Route path="/" exact component={Dashboard} />
                 <Route path="/add-store" exact component={AddStore} />
+                {/* <Route path="/store/:id/dashboard" exact component={AddStore} /> */}
               </Switch>
             </div>
           </div>
