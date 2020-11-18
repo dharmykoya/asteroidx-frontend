@@ -1,12 +1,14 @@
 import React, {useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import {createStore} from "../../store/actions/store.action"
 
 const AddStore = props => {
   const [storeName, setStoreName] = useState("");
-    const [storeUrl, setStoreUrl] = useState("");
+  const [storeUrl, setStoreUrl] = useState("");
     
       const dispatch = useDispatch();
+  const history = useHistory();
 
   const inputChangeHandler = event => {
     const value = event.target.value;
@@ -28,7 +30,7 @@ const AddStore = props => {
     };
       
 
-    await dispatch(createStore(newStore));
+    await dispatch(createStore(newStore, history));
   };
   return (
     <section className="">

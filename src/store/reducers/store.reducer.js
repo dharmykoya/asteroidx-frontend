@@ -1,18 +1,20 @@
 import {
-  CREATE_STORE_FAILED,
-  CREATE_STORE_START,
-  CREATE_STORE_SUCCESS
+  FAILED,
+  START,
+  CREATE_STORE_SUCCESS,
+  GET_ALL_STORE_SUCCESS
 } from "../actionTypes/index";
 
 const initialState = {
   loading: false,
   store: null,
-  error: ""
+  error: "",
+  stores: [],
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case CREATE_STORE_START:
+    case START:
       return {
         ...state,
         loading: true
@@ -26,11 +28,18 @@ export default (state = initialState, action) => {
         error: ""
       };
 
-    case CREATE_STORE_FAILED:
+    case FAILED:
       return {
         ...state,
         loading: false,
         error: action.error
+      };
+    
+    case GET_ALL_STORE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        stores: action.stores
       };
 
     default:

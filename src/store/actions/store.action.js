@@ -1,13 +1,15 @@
 import axios from 'axios';
+import { toast } from "react-toastify";
 import {
-CREATE_STORE_FAILED,
-  CREATE_STORE_START,
-  CREATE_STORE_SUCCESS
+FAILED,
+  START,
+  CREATE_STORE_SUCCESS,
+  GET_ALL_STORE_SUCCESS
 } from "../actionTypes/index";
 
-export const createStoreStart = () => {
+export const start = () => {
   return {
-    type: CREATE_STORE_START
+    type: START
   };
 };
 
@@ -18,25 +20,56 @@ export const createStoreSuccess = store => {
   };
 };
 
-export const createStoreFail = error => {
+export const fail = error => {
   return {
-    type: CREATE_STORE_FAILED,
+    type: FAILED,
     error
   };
 };
 
-export const createStore = data => {
 
+export const getAllStoreSuccess = stores => {
+  return {
+    type: GET_ALL_STORE_SUCCESS,
+    stores
+  };
+};
+
+export const createStore = (data, history) => {
   return dispatch => {
-    dispatch(createStoreStart());
+    dispatch(start());
     return axios.post('http://localhost:8080/stores', data)
         .then(response => {
-          console.log(45, response.data);
-        const { data } = response.data;
+          const { data } = response.data;
+          toast('Store Created', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          });
+          history.push("/");
         dispatch(createStoreSuccess(data));
       })
       .catch(error => {
-        dispatch(createStoreFail("error"));
+        dispatch(fail("error"));
+      });
+  };
+};
+
+export const getAllStore = () => {
+  return dispatch => {
+    dispatch(start());
+    return axios.get('http://localhost:8080/stores')
+      .then(response => {
+          console.log(89, response.data.data);
+          const { data } = response.data;
+        dispatch(getAllStoreSuccess(data));
+      })
+      .catch(error => {
+        dispatch(fail("error"));
       });
   };
 };
