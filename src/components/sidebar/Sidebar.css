@@ -1,3 +1,7 @@
 .sidebar-link a {
     color: #ffffff;
 }
+.sidebar-link {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}

@@ -19,9 +19,11 @@ const TableData = props => {
           {data?.map((store, index) => (
             <tr key={store.id}>
               <td>{index + 1}</td>
-              <td>{ store.name}</td>
+              <td>{store.name}</td>
               <td>{store.url}</td>
-              <td><Link>View</Link></td>
+              <td>
+                <Link to={`/store/${store.id}/dashboard`}>View</Link>
+              </td>
             </tr>
           ))}
         </tbody>
