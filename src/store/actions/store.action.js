@@ -1,10 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 import { toast } from "react-toastify";
 import {
-FAILED,
+  FAILED,
   START,
   CREATE_STORE_SUCCESS,
-  GET_ALL_STORE_SUCCESS
+  GET_ALL_STORE_SUCCESS,
+  GET_STORE_PRODUCTS_SUCCESS
 } from "../actionTypes/index";
 
 export const start = () => {
@@ -27,7 +28,6 @@ export const fail = error => {
   };
 };
 
-
 export const getAllStoreSuccess = stores => {
   return {
     type: GET_ALL_STORE_SUCCESS,
@@ -35,26 +35,35 @@ export const getAllStoreSuccess = stores => {
   };
 };
 
+export const fetchStoreDetail = (store, products) => {
+  return {
+    type: GET_STORE_PRODUCTS_SUCCESS,
+    store,
+    products
+  };
+};
+
 export const createStore = (data, history) => {
   return dispatch => {
     dispatch(start());
-    return axios.post('http://localhost:8080/stores', data)
-        .then(response => {
-          const { data } = response.data;
-          toast('Store Created', {
+    return axios
+      .post("https://asteroidx-backend.herokuapp.com/stores", data)
+      .then(response => {
+        const { data } = response.data;
+        toast("Store Created", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
-          });
-          history.push("/");
+          progress: undefined
+        });
+        history.push("/");
         dispatch(createStoreSuccess(data));
       })
       .catch(error => {
-        dispatch(fail("error"));
+        dispatch(fail(error.response.data.message));
       });
   };
 };
@@ -62,10 +71,10 @@ export const createStore = (data, history) => {
 export const getAllStore = () => {
   return dispatch => {
     dispatch(start());
-    return axios.get('http://localhost:8080/stores')
+    return axios
+      .get("https://asteroidx-backend.herokuapp.com/stores")
       .then(response => {
-          console.log(89, response.data.data);
-          const { data } = response.data;
+        const { data } = response.data;
         dispatch(getAllStoreSuccess(data));
       })
       .catch(error => {
@@ -74,3 +83,81 @@ export const getAllStore = () => {
   };
 };
 
+const getStore = storeId => {
+  return axios
+    .get(`https://asteroidx-backend.herokuapp.com/${storeId}`)
+    .then(response => {
+      const { data } = response.data;
+      return data;
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+const averagePrice = products => {
+  const variants = products.map(prod => prod.variants);
+
+  const prices = variants.map(variant => {
+    return variant.map(v => parseFloat(v.price));
+  });
+  let mergedPrices = [];
+  prices.forEach(price => {
+    mergedPrices.push(price[0]);
+  });
+
+  return (
+    mergedPrices.reduce(
+      (accumulator, price, currentIndex) => accumulator + price
+    ) / mergedPrices?.length
+  );
+};
+
+const mergedProducts = grouped => {
+  let result = [];
+  for (const key in grouped) {
+    if (grouped.hasOwnProperty(key)) {
+      const element = grouped[key];
+      result.push({
+        vendor: key,
+        productsNumber: element.length,
+        averagePrice: averagePrice(element)
+      });
+    }
+  }
+
+  return result;
+};
+
+export const getStoreDetails = storeId => {
+  return async dispatch => {
+    const store = await getStore(storeId);
+    dispatch(start());
+    return axios
+      .get(`${store.url}/products.json?limit=100000000`)
+      .then(response => {
+        const { products } = response.data;
+        const grouped = products.reduce(
+          (hash, obj) => ({
+            ...hash,
+            [obj["vendor"]]: (hash[obj["vendor"]] || []).concat(obj)
+          }),
+          {}
+        );
+        const productMerged = mergedProducts(grouped);
+        dispatch(fetchStoreDetail(store, productMerged));
+      })
+      .catch(error => {
+        toast("There was an error, please reload the page", {
+          position: "top-right",
+          autoClose: false,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
+        dispatch(fail("error"));
+      });
+  };
+};

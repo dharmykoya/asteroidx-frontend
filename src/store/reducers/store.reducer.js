@@ -2,7 +2,8 @@ import {
   FAILED,
   START,
   CREATE_STORE_SUCCESS,
-  GET_ALL_STORE_SUCCESS
+  GET_ALL_STORE_SUCCESS,
+  GET_STORE_PRODUCTS_SUCCESS
 } from "../actionTypes/index";
 
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
   store: null,
   error: "",
   stores: [],
+  products: []
 };
 
 export default (state = initialState, action) => {
@@ -40,6 +42,14 @@ export default (state = initialState, action) => {
         ...state,
         loading: false,
         stores: action.stores
+      };
+    
+    case GET_STORE_PRODUCTS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        store: action.store,
+        products: action.products
       };
 
     default:

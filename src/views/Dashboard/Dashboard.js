@@ -15,7 +15,8 @@ const Dashboard = props => {
 
 
   return (
-      <section className="">
+    <section className="mt-4">
+        <h3 className="text-center">All Stores</h3>
         <TableData data={stores} />
       </section>
   );
