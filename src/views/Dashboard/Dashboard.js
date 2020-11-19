@@ -7,7 +7,7 @@ import "./Dashboard.css";
 const Dashboard = props => {
 
   const dispatch = useDispatch()
-  const { stores,loading } = useSelector(state => state.store);
+  const { stores } = useSelector(state => state.store);
 
   useEffect(() => {
     dispatch(getAllStore());
