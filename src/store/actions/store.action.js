@@ -63,7 +63,15 @@ export const createStore = (data, history) => {
         dispatch(createStoreSuccess(data));
       })
       .catch(error => {
-        dispatch(fail(error.response.data.message));
+        toast("Error Creating store", {
+          position: "top-right",
+          autoClose: false,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
       });
   };
 };
@@ -78,6 +86,15 @@ export const getAllStore = () => {
         dispatch(getAllStoreSuccess(data));
       })
       .catch(error => {
+        toast("Error getting all stores", {
+          position: "top-right",
+          autoClose: false,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
         dispatch(fail("error"));
       });
   };
@@ -85,12 +102,22 @@ export const getAllStore = () => {
 
 const getStore = storeId => {
   return axios
-    .get(`https://asteroidx-backend.herokuapp.com/${storeId}`)
+    .get(`https://asteroidx-backend.herokuapp.com/stores/${storeId}`)
     .then(response => {
       const { data } = response.data;
       return data;
     })
     .catch(error => {
+      toast("Error getting store", {
+          position: "top-right",
+          autoClose: false,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        progress: undefined,
+          
+        });
       return error;
     });
 };
@@ -157,7 +184,6 @@ export const getStoreDetails = storeId => {
           draggable: true,
           progress: undefined
         });
-        dispatch(fail("error"));
       });
   };
 };

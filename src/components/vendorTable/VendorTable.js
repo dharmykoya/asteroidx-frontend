@@ -1,6 +1,5 @@
 import React from "react";
 import { Table } from "react-bootstrap";
-import { Link } from "react-router-dom";
 
 const VendorTable = props => {
   const { data } = props;
@@ -14,7 +13,7 @@ const VendorTable = props => {
 
   formatter.format(2500); /* $2,500.00 */
   return (
-    <div>
+    <div className="table-responsive-md">
       <Table striped bordered hover>
         <thead>
           <tr>

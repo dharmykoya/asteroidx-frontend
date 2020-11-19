@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 import "./Loader.css"
 
 const Loader = () => {
     return (
-        <div class="loader pt-4"></div>
+        <div className="loader pt-4"></div>
     )
 }
 

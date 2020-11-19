@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const TableData = props => {
   const { data } = props;
   return (
-    <div>
+    <div className="table-responsive-md">
       <Table striped bordered hover>
         <thead>
           <tr>
